@@ -1,73 +1,116 @@
-import java.util.Date;
+import java.util.Scanner;
+
+class Student {
+    String name;
+    int mark1;
+    int mark2;
+    int mark3;
+
+    Student(String name, int mark1, int mark2, int mark3) {
+        this.name = name;
+        this.mark1 = mark1;
+        this.mark2 = mark2;
+        this.mark3 = mark3;
+    }
+}
 
 public class Main {
+    static Student[] students;
+    static int i = 0;
+    static Scanner sc = new Scanner(System.in);
+
+    static int getChoice() {
+        System.out.println(
+                "Enter your choice\n1.Add\n2.Remove\n3.Update\n4.Delete\n5.List\n6.Enter your option (Greater than 6 for exit)");
+        return sc.nextInt();
+    }
+
+    static Student addStudent() {
+        System.out.println("Enter Student details");
+        System.out.println("Name");
+        sc.nextLine();
+        String name = sc.nextLine();
+        System.out.println("Marks1");
+        int mark1 = sc.nextInt();
+        System.out.println("Marks2");
+        int mark2 = sc.nextInt();
+        System.out.println("Marks3");
+        int mark3 = sc.nextInt();
+        return new Student(name, mark1, mark2, mark3);
+    }
+
+    static void removeStudent(int id) {
+        students[id] = null;
+    }
+
+    static void list() {
+        for (Student s : students) {
+            if (s != null)
+                System.out.println(s.name + "  " + s.mark1 + "  " + s.mark2 + "  " + s.mark3);
+        }
+    }
+
+    static Student updateStudent(int id) {
+        Student updatedStudent = addStudent();
+        students[id] = updatedStudent;
+        return updatedStudent;
+    }
+
     public static void main(String[] args) {
+        System.out.println("Enter no. of Students");
+        int N = sc.nextInt();
+        int choice, id;
+        students = new Student[N];
+        do {
+            choice = getChoice();
+            switch (choice) {
+                case 1:
+                    if (i >= N) {
+                        System.out.println("Capacity Full");
+                        break;
+                    }
+                    students[i++] = addStudent();
+                    System.out.println("Student added sucessfully");
+                    break;
+                case 2:
+                case 4:
+                    if (i == 0) {
+                        System.out.println("No students present");
+                        break;
+                    }
+                    System.out.println("Enter the id of student to delete/remove");
+                    id = sc.nextInt();
+                    if (id >= N) {
+                        System.out.println("Invalid Id");
+                        break;
+                    }
+                    removeStudent(id);
+                    System.out.println("Student remove sucessfully");
 
-        Book b= new Book();
-        //Read values for BOOK
-        b.setBookId(2343);
-        b.setTitle("title");
-        b.setDescription("description");
-        b.setAuthor("Ddsf");
-        b.setAvailableQuantity(4);
-        b.setTotalQuantity(7);
-        b.setPrice(345);
-        b.setRentPerDay(345);
+                    break;
+                case 3:
+                    id = sc.nextInt();
+                    if (id < 0) {
+                        System.out.println("No students present");
+                        break;
+                    }
+                    if (id >= N) {
+                        System.out.println("Invalid student id");
+                        break;
+                    }
+                    updateStudent(id);
+                    System.out.println("Student updated sucessfully");
+                    break;
+                case 5:
+                    System.out.println("List of students");
+                    list();
+                    break;
+                default:
+                    System.out.println("Program terminated Sucessfully");
+                    break;
+            }
+            System.out.println("\n\n\n-------------------------------------------------\n\n\n");
 
-        
-        Customer c = new Customer();
-        //Read values for Customer
-        c.setUserId(101);
-        c.setEmailId("email");
-        c.setPassword("sfg");
-        c.setFirstName("dfg");
-        c.setCity("city");
-        c.setGender("gender");
-        c.setPhoneNo("345");
-        c.setLastName("dfg");
-
-        Address a = new Address();
-        //Read Address details of Customer
-        a.setCity("e");
-        a.setState("hj");
-        a.setZip(3434);
-        a.setCountry("gm");
-        c.setAddress(a);
-
-
-
-
-        BookRental bookRental = new BookRental();
-        //Read book Rental details
-        bookRental.setBookId(b.getBookId());
-        bookRental.setrentalId(201);
-        bookRental.setUserId(c.getUserId());
-        bookRental.setQuantity(4);
-        bookRental.setStartDate(new Date(1));
-        bookRental.setEndDate(new Date(2));
-        bookRental.setTotalAmount(200);
-        bookRental.setReturnedDate(new Date(4));
-
-        //operations on book rental service
-        BookRentalService bookRentalService  = new BookRentalServiceImpl();
-        bookRentalService.createBookRental(bookRental);
-        bookRentalService.deleteBookRental(101);
-        bookRentalService.searchByBookId(201);
-        bookRentalService.searchByCustomerId(101);
-        bookRentalService.getRental();
-
-        BookRental bookRentalUpdate = new BookRental();
-        bookRental.setBookId(b.getBookId());
-        bookRental.setrentalId(201);
-        bookRental.setUserId(c.getUserId());
-        bookRental.setQuantity(4);
-        bookRental.setStartDate(new Date(1));
-        bookRental.setEndDate(new Date(2));
-        bookRental.setTotalAmount(200);
-        bookRental.setReturnedDate(new Date(4));
-
-        bookRentalService.updateBookRental(bookRentalUpdate);
-
-        
-    }   
+        } while (choice < 6);
+    }
 }
